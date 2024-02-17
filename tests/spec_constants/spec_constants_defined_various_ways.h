@@ -177,6 +177,7 @@ static void sc_run_test_core(util::logger &log) {
   }
 }
 
+#if SYCL_CTS_ENABLE_HALF_TESTS
 template <typename via_kb>
 static void sc_run_test_fp16(util::logger &log) {
   using namespace specialization_constants_defined_various_ways;
@@ -200,6 +201,7 @@ static void sc_run_test_fp16(util::logger &log) {
 #endif
   }
 }
+#endif
 
 template <typename via_kb>
 static void sc_run_test_fp64(util::logger &log) {
