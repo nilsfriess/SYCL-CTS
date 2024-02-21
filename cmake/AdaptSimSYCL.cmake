@@ -17,7 +17,7 @@ function(add_sycl_executable_implementation)
     add_library(${object_lib_name} OBJECT ${test_cases_list})
     add_executable(${exe_name} $<TARGET_OBJECTS:${object_lib_name}>)
 
-    # hipSYCL needs the macro to be called on both the object library (to
+    # AdaptiveCpp needs the macro to be called on both the object library (to
     # override the compiler) and the executable (to override the linker).
     add_sycl_to_target(TARGET ${object_lib_name} SOURCES ${test_cases_list})
     add_sycl_to_target(TARGET ${exe_name})
