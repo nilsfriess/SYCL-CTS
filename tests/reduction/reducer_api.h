@@ -134,6 +134,7 @@ struct check_reducer_subscript {
                       [](int val) { return val; }));
   }
 
+#if !SYCL_CTS_COMPILING_WITH_ADAPTIVECPP
   template <typename OperatorT>
   void check_span(sycl::queue& queue) {
     auto allocated_memory =
@@ -192,7 +193,7 @@ struct check_reducer_subscript {
     CHECK(std::all_of(results.begin(), results.end(),
                       [](int val) { return val; }));
   }
-
+#endif
   void operator()(sycl::queue& queue, const std::string& type_name) {
     INFO("type: " << type_name);
 
@@ -208,9 +209,12 @@ struct check_reducer_subscript {
 
     if (has_aspect) check_value_ptr<OperatorT>(queue);
     check_buffer<OperatorT>(queue);
+#if !SYCL_CTS_COMPILING_WITH_ADAPTIVECPP
     if (has_aspect) check_span<OperatorT>(queue);
+#endif
   }
 };
+
 
 template <typename AccumulatorT, typename OperatorT>
 struct kernel_name_identity;

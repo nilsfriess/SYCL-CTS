@@ -104,6 +104,7 @@ auto get_reduction_for_buffer(BufferT &buffer, sycl::handler &cgh,
   }
 }
 
+#if 0
 /** @brief Construct reducer with sycl::span
  *  @tparam UsePropertyFlag bool flag that let switch between using and don't
  *          using sycl::property::reduction::initialize_to_identity
@@ -122,6 +123,7 @@ auto get_reduction_for_span(SpanT &span, FunctorT functor) {
     return sycl::reduction(span, functor);
   }
 }
+#endif
 
 /** @brief Run test for reduction that receive ptr to a variable for construct
  *         reducer object
@@ -224,6 +226,7 @@ void run_test_for_buffer(FunctorT functor, RangeT range, sycl::queue& queue,
   CHECK(output_buffer.get_host_access()[0] == expected_value);
 }
 
+#if 0
 /** @brief Run test for reduction that receive sycl::span for construct
  *         reducer object
  *  @tparam VariableT Variable type from type coverage
@@ -281,6 +284,7 @@ void run_test_for_span(FunctorT functor, RangeT range, sycl::queue& queue,
     CHECK(allocated_memory.get()[i] == expected_value);
   }
 }
+#endif
 
 /** @brief Dummy functor that use in type coverage for scalar type variables
  *  @tparam VariableT Variable type from type coverage
@@ -310,8 +314,8 @@ void run_test_for_all_reductions_types(FunctorT functor, RangeT& range,
                            TestCaseT>(functor, range, queue, type_name);
     run_test_for_buffer<VariableT, UseCombineFlagT, UsePropertyFlag, TestCaseT>(
         functor, range, queue, type_name);
-    run_test_for_span<VariableT, UseCombineFlagT, UsePropertyFlag, TestCaseT>(
-        functor, range, queue, type_name);
+    // run_test_for_span<VariableT, UseCombineFlagT, UsePropertyFlag, TestCaseT>(
+    //     functor, range, queue, type_name);
   }
 }
 

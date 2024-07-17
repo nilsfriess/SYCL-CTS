@@ -22,17 +22,11 @@
 *******************************************************************************/
 #include "../common/disabled_for_test_case.h"
 #include "catch2/catch_test_macros.hpp"
-
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-#if !SYCL_CTS_COMPILING_WITH_ADAPTIVECPP
 #include "reduction_without_identity_param_common.h"
-#endif
 
 namespace reduction_without_identity_param_fp16 {
 
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_fp16", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_fp16", "[reduction]"){
   using namespace reduction_without_identity_param_common;
 
   auto queue = sycl_cts::util::get_cts_object::queue();
@@ -49,11 +43,9 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
       reduction_common::range, queue, "sycl::half");
   run_tests_for_all_functors<sycl::half, run_test_with_property>()(
       reduction_common::nd_range, queue, "sycl::half");
-});
+};
 
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_item_twice_fp16", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_item_twice_fp16", "[reduction]"){
   using namespace reduction_without_identity_param_common;
 
   auto queue = sycl_cts::util::get_cts_object::queue();
@@ -72,11 +64,9 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
       reduction_common::range, queue, "sycl::half");
   run_tests_for_all_functors_item_twice<sycl::half, run_test_with_property>()(
       reduction_common::nd_range, queue, "sycl::half");
-});
+};
 
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_even_item_fp16", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_even_item_fp16", "[reduction]"){
   using namespace reduction_without_identity_param_common;
 
   auto queue = sycl_cts::util::get_cts_object::queue();
@@ -93,11 +83,9 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
       reduction_common::range, queue, "sycl::half");
   run_tests_for_all_functors_even_item<sycl::half, run_test_with_property>()(
       reduction_common::nd_range, queue, "sycl::half");
-});
+};
 
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_no_one_item_fp16", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_no_one_item_fp16", "[reduction]"){
   using namespace reduction_without_identity_param_common;
 
   auto queue = sycl_cts::util::get_cts_object::queue();
@@ -116,5 +104,5 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
       reduction_common::range, queue, "sycl::half");
   run_tests_for_all_functors_no_one_item<sycl::half, run_test_with_property>()(
       reduction_common::nd_range, queue, "sycl::half");
-});
+};
 }  // namespace reduction_without_identity_param_fp16

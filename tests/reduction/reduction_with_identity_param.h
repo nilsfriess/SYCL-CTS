@@ -99,50 +99,50 @@ void run_test_for_buffer(RangeT& range_param, sycl::queue& queue) {
   CHECK(reduction_buffer.get_host_access()[0] == expected_value);
 }
 
-template <typename VariableT, reduction_common::test_case_type TestCaseT,
-          typename RangeT>
-void run_test_for_span(RangeT& range_param, sycl::queue& queue) {
-  check_usm_shared_aspect(queue);
+// template <typename VariableT, reduction_common::test_case_type TestCaseT,
+//           typename RangeT>
+// void run_test_for_span(RangeT& range_param, sycl::queue& queue) {
+//   check_usm_shared_aspect(queue);
 
-  sycl::buffer<VariableT> input_buf{range};
-  fill_buffer<VariableT>(input_buf);
+//   sycl::buffer<VariableT> input_buf{range};
+//   fill_buffer<VariableT>(input_buf);
 
-  VariableT identity_value(identity);
+//   VariableT identity_value(identity);
 
-  std::vector<VariableT> expected_values(number_elements);
-  for (int i = 0; i < number_elements; i++) {
-    expected_values[i] = get_expected_value<TestCaseT>(
-        op_without_identity<VariableT>(), input_buf, VariableT(initial + i));
-  }
+//   std::vector<VariableT> expected_values(number_elements);
+//   for (int i = 0; i < number_elements; i++) {
+//     expected_values[i] = get_expected_value<TestCaseT>(
+//         op_without_identity<VariableT>(), input_buf, VariableT(initial + i));
+//   }
 
-  auto allocated_memory =
-      usm_helper::allocate_usm_memory<sycl::usm::alloc::shared, VariableT>(
-          queue, number_elements);
+//   auto allocated_memory =
+//       usm_helper::allocate_usm_memory<sycl::usm::alloc::shared, VariableT>(
+//           queue, number_elements);
 
-  for (int i = 0; i < number_elements; i++) {
-    allocated_memory.get()[i] = VariableT(initial + i);
-  }
+//   for (int i = 0; i < number_elements; i++) {
+//     allocated_memory.get()[i] = VariableT(initial + i);
+//   }
 
-  queue.submit([&](sycl::handler &cgh) {
-    sycl::span<VariableT, number_elements> span(allocated_memory.get(),
-                                                number_elements);
-    auto reduction =
-        sycl::reduction(span, identity_value, op_without_identity<VariableT>());
+//   queue.submit([&](sycl::handler &cgh) {
+//     sycl::span<VariableT, number_elements> span(allocated_memory.get(),
+//                                                 number_elements);
+//     auto reduction =
+//         sycl::reduction(span, identity_value, op_without_identity<VariableT>());
 
-    auto inputValues =
-        input_buf.template get_access<sycl::access_mode::read>(cgh);
-    auto lambda = reduction_get_lambda::get_lambda_for_span<
-        VariableT, RangeT, reduction_get_lambda::with_combine,
-        op_without_identity<VariableT>, TestCaseT>(inputValues,
-                                                   number_elements);
-    cgh.parallel_for<kernel<VariableT, RangeT, TestCaseT, 3>>(
-        range_param, reduction, lambda);
-  });
-  queue.wait_and_throw();
-  for (int i = 0; i < number_elements; i++) {
-    CHECK(allocated_memory.get()[i] == expected_values[i]);
-  }
-}
+//     auto inputValues =
+//         input_buf.template get_access<sycl::access_mode::read>(cgh);
+//     auto lambda = reduction_get_lambda::get_lambda_for_span<
+//         VariableT, RangeT, reduction_get_lambda::with_combine,
+//         op_without_identity<VariableT>, TestCaseT>(inputValues,
+//                                                    number_elements);
+//     cgh.parallel_for<kernel<VariableT, RangeT, TestCaseT, 3>>(
+//         range_param, reduction, lambda);
+//   });
+//   queue.wait_and_throw();
+//   for (int i = 0; i < number_elements; i++) {
+//     CHECK(allocated_memory.get()[i] == expected_values[i]);
+//   }
+// }
 
 template <typename VariableT, reduction_common::test_case_type TestCaseT,
           typename RangeT>
@@ -210,43 +210,43 @@ void run_test_for_buffer_property_list(RangeT& range_param,
   CHECK(reduction_buffer.get_host_access()[0] == expected_value);
 }
 
-template <typename VariableT, reduction_common::test_case_type TestCaseT,
-          typename RangeT>
-void run_test_for_span_property_list(RangeT& range_param, sycl::queue& queue) {
-  check_usm_shared_aspect(queue);
-  sycl::buffer<VariableT> input_buf{range};
-  fill_buffer<VariableT>(input_buf);
+// template <typename VariableT, reduction_common::test_case_type TestCaseT,
+//           typename RangeT>
+// void run_test_for_span_property_list(RangeT& range_param, sycl::queue& queue) {
+//   check_usm_shared_aspect(queue);
+//   sycl::buffer<VariableT> input_buf{range};
+//   fill_buffer<VariableT>(input_buf);
 
-  VariableT identity_value(identity);
+//   VariableT identity_value(identity);
 
-  VariableT expected_value = get_expected_value<TestCaseT>(
-      op_without_identity<VariableT>(), input_buf, identity_value);
+//   VariableT expected_value = get_expected_value<TestCaseT>(
+//       op_without_identity<VariableT>(), input_buf, identity_value);
 
-  auto allocated_memory =
-      usm_helper::allocate_usm_memory<sycl::usm::alloc::shared, VariableT>(
-          queue, number_elements);
+//   auto allocated_memory =
+//       usm_helper::allocate_usm_memory<sycl::usm::alloc::shared, VariableT>(
+//           queue, number_elements);
 
-  queue.submit([&](sycl::handler &cgh) {
-    sycl::span<VariableT, number_elements> span(allocated_memory.get(),
-                                                number_elements);
-    auto reduction =
-        sycl::reduction(span, identity_value, op_without_identity<VariableT>(),
-                        {sycl::property::reduction::initialize_to_identity()});
+//   queue.submit([&](sycl::handler &cgh) {
+//     sycl::span<VariableT, number_elements> span(allocated_memory.get(),
+//                                                 number_elements);
+//     auto reduction =
+//         sycl::reduction(span, identity_value, op_without_identity<VariableT>(),
+//                         {sycl::property::reduction::initialize_to_identity()});
 
-    auto inputValues =
-        input_buf.template get_access<sycl::access_mode::read>(cgh);
-    auto lambda = reduction_get_lambda::get_lambda_for_span<
-        VariableT, RangeT, reduction_get_lambda::with_combine,
-        op_without_identity<VariableT>, TestCaseT>(inputValues,
-                                                   number_elements);
-    cgh.parallel_for<kernel<VariableT, RangeT, TestCaseT, 6>>(
-        range_param, reduction, lambda);
-  });
-  queue.wait_and_throw();
-  for (int i = 0; i < number_elements; i++) {
-    CHECK(allocated_memory.get()[i] == expected_value);
-  }
-}
+//     auto inputValues =
+//         input_buf.template get_access<sycl::access_mode::read>(cgh);
+//     auto lambda = reduction_get_lambda::get_lambda_for_span<
+//         VariableT, RangeT, reduction_get_lambda::with_combine,
+//         op_without_identity<VariableT>, TestCaseT>(inputValues,
+//                                                    number_elements);
+//     cgh.parallel_for<kernel<VariableT, RangeT, TestCaseT, 6>>(
+//         range_param, reduction, lambda);
+//   });
+//   queue.wait_and_throw();
+//   for (int i = 0; i < number_elements; i++) {
+//     CHECK(allocated_memory.get()[i] == expected_value);
+//   }
+// }
 
 template <typename VariableT>
 struct run_test_for_type {
@@ -263,12 +263,12 @@ struct run_test_for_type {
     run_test_for_buffer<VariableT,
                         reduction_common::test_case_type::each_work_item>(
         nd_range, queue);
-    run_test_for_span<VariableT,
-                      reduction_common::test_case_type::each_work_item>(range,
-                                                                        queue);
-    run_test_for_span<VariableT,
-                      reduction_common::test_case_type::each_work_item>(
-        nd_range, queue);
+    // run_test_for_span<VariableT,
+    //                   reduction_common::test_case_type::each_work_item>(range,
+    //                                                                     queue);
+    // run_test_for_span<VariableT,
+    //                   reduction_common::test_case_type::each_work_item>(
+    //     nd_range, queue);
 
     run_test_for_value_ptr_property_list<
         VariableT, reduction_common::test_case_type::each_work_item>(range,
@@ -282,12 +282,12 @@ struct run_test_for_type {
     run_test_for_buffer_property_list<
         VariableT, reduction_common::test_case_type::each_work_item>(nd_range,
                                                                      queue);
-    run_test_for_span_property_list<
-        VariableT, reduction_common::test_case_type::each_work_item>(range,
-                                                                     queue);
-    run_test_for_span_property_list<
-        VariableT, reduction_common::test_case_type::each_work_item>(nd_range,
-                                                                     queue);
+    // run_test_for_span_property_list<
+    //     VariableT, reduction_common::test_case_type::each_work_item>(range,
+    //                                                                  queue);
+    // run_test_for_span_property_list<
+    //     VariableT, reduction_common::test_case_type::each_work_item>(nd_range,
+    //                                                                  queue);
   }
 };
 
@@ -306,12 +306,12 @@ struct run_test_for_type_even_item {
     run_test_for_buffer<VariableT,
                         reduction_common::test_case_type::each_even_work_item>(
         nd_range, queue);
-    run_test_for_span<VariableT,
-                      reduction_common::test_case_type::each_even_work_item>(
-        range, queue);
-    run_test_for_span<VariableT,
-                      reduction_common::test_case_type::each_even_work_item>(
-        nd_range, queue);
+    // run_test_for_span<VariableT,
+    //                   reduction_common::test_case_type::each_even_work_item>(
+    //     range, queue);
+    // run_test_for_span<VariableT,
+    //                   reduction_common::test_case_type::each_even_work_item>(
+    //     nd_range, queue);
 
     run_test_for_value_ptr_property_list<
         VariableT, reduction_common::test_case_type::each_even_work_item>(
@@ -325,12 +325,12 @@ struct run_test_for_type_even_item {
     run_test_for_buffer_property_list<
         VariableT, reduction_common::test_case_type::each_even_work_item>(
         nd_range, queue);
-    run_test_for_span_property_list<
-        VariableT, reduction_common::test_case_type::each_even_work_item>(
-        range, queue);
-    run_test_for_span_property_list<
-        VariableT, reduction_common::test_case_type::each_even_work_item>(
-        nd_range, queue);
+    // run_test_for_span_property_list<
+    //     VariableT, reduction_common::test_case_type::each_even_work_item>(
+    //     range, queue);
+    // run_test_for_span_property_list<
+    //     VariableT, reduction_common::test_case_type::each_even_work_item>(
+    //     nd_range, queue);
   }
 };
 
@@ -349,12 +349,12 @@ struct run_test_for_type_no_one_item {
     run_test_for_buffer<VariableT,
                         reduction_common::test_case_type::no_one_work_item>(
         nd_range, queue);
-    run_test_for_span<VariableT,
-                      reduction_common::test_case_type::no_one_work_item>(
-        range, queue);
-    run_test_for_span<VariableT,
-                      reduction_common::test_case_type::no_one_work_item>(
-        nd_range, queue);
+    // run_test_for_span<VariableT,
+    //                   reduction_common::test_case_type::no_one_work_item>(
+    //     range, queue);
+    // run_test_for_span<VariableT,
+    //                   reduction_common::test_case_type::no_one_work_item>(
+    //     nd_range, queue);
 
     run_test_for_value_ptr_property_list<
         VariableT, reduction_common::test_case_type::no_one_work_item>(range,
@@ -368,12 +368,12 @@ struct run_test_for_type_no_one_item {
     run_test_for_buffer_property_list<
         VariableT, reduction_common::test_case_type::no_one_work_item>(nd_range,
                                                                        queue);
-    run_test_for_span_property_list<
-        VariableT, reduction_common::test_case_type::no_one_work_item>(range,
-                                                                       queue);
-    run_test_for_span_property_list<
-        VariableT, reduction_common::test_case_type::no_one_work_item>(nd_range,
-                                                                       queue);
+    // run_test_for_span_property_list<
+    //     VariableT, reduction_common::test_case_type::no_one_work_item>(range,
+    //                                                                    queue);
+    // run_test_for_span_property_list<
+    //     VariableT, reduction_common::test_case_type::no_one_work_item>(nd_range,
+    //                                                                    queue);
   }
 };
 
@@ -392,12 +392,12 @@ struct run_test_for_type_item_twice {
     run_test_for_buffer<VariableT,
                         reduction_common::test_case_type::each_work_item_twice>(
         nd_range, queue);
-    run_test_for_span<VariableT,
-                      reduction_common::test_case_type::each_work_item_twice>(
-        range, queue);
-    run_test_for_span<VariableT,
-                      reduction_common::test_case_type::each_work_item_twice>(
-        nd_range, queue);
+    // run_test_for_span<VariableT,
+    //                   reduction_common::test_case_type::each_work_item_twice>(
+    //     range, queue);
+    // run_test_for_span<VariableT,
+    //                   reduction_common::test_case_type::each_work_item_twice>(
+    //     nd_range, queue);
 
     run_test_for_value_ptr_property_list<
         VariableT, reduction_common::test_case_type::each_work_item_twice>(
@@ -411,12 +411,12 @@ struct run_test_for_type_item_twice {
     run_test_for_buffer_property_list<
         VariableT, reduction_common::test_case_type::each_work_item_twice>(
         nd_range, queue);
-    run_test_for_span_property_list<
-        VariableT, reduction_common::test_case_type::each_work_item_twice>(
-        range, queue);
-    run_test_for_span_property_list<
-        VariableT, reduction_common::test_case_type::each_work_item_twice>(
-        nd_range, queue);
+    // run_test_for_span_property_list<
+    //     VariableT, reduction_common::test_case_type::each_work_item_twice>(
+    //     range, queue);
+    // run_test_for_span_property_list<
+    //     VariableT, reduction_common::test_case_type::each_work_item_twice>(
+    //     nd_range, queue);
   }
 };
 

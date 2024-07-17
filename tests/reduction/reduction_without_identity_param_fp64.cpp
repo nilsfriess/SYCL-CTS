@@ -23,17 +23,11 @@
 #include "../common/disabled_for_test_case.h"
 #include "catch2/catch_test_macros.hpp"
 
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-#if !SYCL_CTS_COMPILING_WITH_ADAPTIVECPP
 #include "reduction_without_identity_param_common.h"
-#endif
 
 namespace reduction_without_identity_param_fp64 {
 
-// FIXME: re-enable when compilation failure for reduction with custom type is
-// fixed and sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_fp64", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_fp64", "[reduction]"){
   using namespace reduction_without_identity_param_common;
 
   auto queue = sycl_cts::util::get_cts_object::queue();
@@ -50,12 +44,9 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
       reduction_common::range, queue, "double");
   run_tests_for_all_functors<double, run_test_with_property>()(
       reduction_common::nd_range, queue, "double");
-});
+};
 
-// FIXME: re-enable when compilation failure for reduction with custom type is
-// fixed and sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_item_twice_fp64", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_item_twice_fp64", "[reduction]"){
   using namespace reduction_without_identity_param_common;
 
   auto queue = sycl_cts::util::get_cts_object::queue();
@@ -72,12 +63,9 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
       reduction_common::range, queue, "double");
   run_tests_for_all_functors_item_twice<double, run_test_with_property>()(
       reduction_common::nd_range, queue, "double");
-});
+};
 
-// FIXME: re-enable when compilation failure for reduction with custom type is
-// fixed and sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_even_item_fp64", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_even_item_fp64", "[reduction]"){
   using namespace reduction_without_identity_param_common;
 
   auto queue = sycl_cts::util::get_cts_object::queue();
@@ -94,12 +82,9 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
       reduction_common::range, queue, "double");
   run_tests_for_all_functors_even_item<double, run_test_with_property>()(
       reduction_common::nd_range, queue, "double");
-});
+};
 
-// FIXME: re-enable when compilation failure for reduction with custom type is
-// fixed and sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_no_one_item_fp64", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_no_one_item_fp64", "[reduction]"){
   using namespace reduction_without_identity_param_common;
 
   auto queue = sycl_cts::util::get_cts_object::queue();
@@ -116,6 +101,6 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
       reduction_common::range, queue, "double");
   run_tests_for_all_functors_no_one_item<double, run_test_with_property>()(
       reduction_common::nd_range, queue, "double");
-});
+};
 
 }  // namespace reduction_without_identity_param_fp64

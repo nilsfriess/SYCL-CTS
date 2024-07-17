@@ -23,9 +23,6 @@
 
 #include "../common/disabled_for_test_case.h"
 #include "catch2/catch_test_macros.hpp"
-
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-#if !SYCL_CTS_COMPILING_WITH_ADAPTIVECPP
 #include "reduction_without_identity_param_common.h"
 
 namespace reduction_without_identity_param_item_twice_core {
@@ -110,18 +107,13 @@ void run_tests_for_identity_type(sycl::queue& queue) {
 }
 }  // namespace reduction_without_identity_param_item_twice_core
 
-#endif  // !SYCL_CTS_COMPILING_WITH_ADAPTIVECPP
-
 namespace reduction_without_identity_param_item_twice_core {
 
-// FIXME: re-enable when compilation failure for reduction with custom type is
-// fixed and sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reduction_without_identity_param_item_twice_core", "[reduction]")({
+TEST_CASE("reduction_without_identity_param_item_twice_core", "[reduction]"){
   auto queue = sycl_cts::util::get_cts_object::queue();
 
   run_tests_for_identity_type<run_test_without_property>(queue);
   run_tests_for_identity_type<run_test_with_property>(queue);
-});
+};
 
 }  // namespace reduction_without_identity_param_item_twice_core

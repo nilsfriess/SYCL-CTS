@@ -19,10 +19,7 @@
 *******************************************************************************/
 #include "../common/common.h"
 #include "../common/disabled_for_test_case.h"
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-#if !SYCL_CTS_COMPILING_WITH_ADAPTIVECPP
 #include "reducer_api.h"
-#endif
 
 #include <functional>
 #include <numeric>
@@ -31,9 +28,7 @@
 
 struct kernel_name;
 
-// FIXME: re-enable when sycl::reduction is implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reducer class", "[reducer]")({
+TEST_CASE("reducer class", "[reducer]"){
   sycl::queue queue = sycl_cts::util::get_cts_object::queue();
 
   // dummy output value
@@ -64,11 +59,9 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
   // all results are expected to evaluate to true
   CHECK(
       std::all_of(results.begin(), results.end(), [](int val) { return val; }));
-});
+};
 
-// FIXME: re-enable when reducer is fully implemented in AdaptiveCpp
-DISABLED_FOR_TEST_CASE(AdaptiveCpp)
-("reducer api core", "[reducer]")({
+TEST_CASE("reducer api core", "[reducer]"){
   sycl::queue queue = sycl_cts::util::get_cts_object::queue();
 
   // check subscript operator
@@ -77,4 +70,4 @@ DISABLED_FOR_TEST_CASE(AdaptiveCpp)
   // check identity operator
   for_all_types<check_reducer_identity>(reduction_common::scalar_types, queue);
   check_reducer_identity<bool>{}(queue, "bool");
-});
+};
